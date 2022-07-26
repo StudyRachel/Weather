@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天氣卡片</title>
+    <style>
+        /* main{
+            width: 400px;
+            margin: 10px auto;
+            border: 1px solid red;
+        } */
+        div.card{
+            width: 300px;
+            height: 400px;
+            margin: 10px;
+
+            border: 1px solid black;
+            border-radius: 10px;
+            background-color:antiquewhite;
+
+            cursor: pointer;
+            text-align: center;
+        }
+        div.pic{
+            width: 150px;
+            height: 150px;
+            /* border: 1px solid green; */
+            margin: 10px auto;
+            /* text-align: center; */
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    <main></main>
+
+
+    <script>
+        const url = 'https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-1D4A93AD-B874-4F3C-8F48-F5DE009A592D';
+        const main = document.querySelector('main');
+
+        // fetch的主體結構，將抓取的資料，利用then的功能去執行下一個階段的處理
+
+        fetch(url)
+            .then(function(response) {
+                // 將抓回來的資料做了很多複雜的處理與過濾，之後將結果return(返回)到下一個步驟
+                return response.json();
+            })
+            .then(function(myJson) {
+                // 將抓回來的資料，過篩處理過後，進到這個function處理                
+                console.log(myJson);
+
+                //印出台中市
+                // console.log(myJson.records.location.length);
+
+                // 嘗試印出所有縣市的名稱(利用for)
+                for (let index = 0; index < myJson.records.location.length; index++) {
+                    console.log(myJson.records.location[index].locationName);    
+                    
+                    // 使用原始 字串的給法
+                // main.innerHTML ='<div class="card"><div class="pic"></div> <h1>' + myJson.records.location[11].locationName + '</h1> <p>天氣狀況：'+ myJson.records.location[11].weatherElement[0].time[0].parameter.parameterName +'</p> <p>溫度：20~30度</p> <p>體感狀態：熱情如火</p> </div>';
+                
+                // ES6使用樣版 字串的語法,使用『反引號`』，因單引號不接受換行
+                main.innerHTML =`
+                
+                <div class="card">
+                    <div class="pic"></div>
+                    <h1>${myJson.records.location[11].locationName} </h1>
+                    <p>天氣狀況：${myJson.records.location[11].weatherElement[0].time[0].parameter.parameterName}</p>
+                    <p>溫度：20~30度</p>
+                    <p>體感狀態：${myJson.records.location[11].weatherElement[3].time[0].parameter.parameterName}</p>
+                </div>`
+                }
+             });
+
+            
+    </script>
+</body>
+</html>
